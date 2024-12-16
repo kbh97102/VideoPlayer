@@ -64,4 +64,5 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.hilt)
     implementation(libs.hilt.compiler)
+    implementation(libs.hilt.navigation)
 }

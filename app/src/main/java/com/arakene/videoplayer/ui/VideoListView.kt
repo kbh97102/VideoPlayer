@@ -21,12 +21,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.arakene.videoplayer.db.Video
 import com.arakene.videoplayer.ui.viewmodels.VideoListViewModel
+import java.util.UUID
 
 
 @Composable
 fun VideoListView(
-//    viewModel: VideoListViewModel =
+    viewModel: VideoListViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
@@ -41,8 +44,16 @@ fun VideoListView(
         list.map { uri ->
             uri.let {
                 // Callback when a file is selected
-        //            onFileSelected(it)
+                //            onFileSelected(it)
                 Log.d(">>>>", "uri $it")
+
+                viewModel.insertVideo(
+                    Video(
+                        uri = it,
+                        title = "testTitle ${UUID.randomUUID()}",
+                        thumbnail = null
+                    )
+                )
 
                 getThumbnailFromContentUri(context.contentResolver, it)?.let { result ->
                     bitMap = result
