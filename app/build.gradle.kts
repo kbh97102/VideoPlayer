@@ -59,4 +59,7 @@ dependencies {
     implementation(libs.exoplayer)
     implementation(libs.exoplayer.ui)
     implementation(libs.exoplayer.common)
+    implementation(libs.room.ktx)
+    implementation(libs.room.compiler)
+    implementation(libs.room.runtime)
 }
