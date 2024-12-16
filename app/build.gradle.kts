@@ -62,4 +62,6 @@ dependencies {
     implementation(libs.room.ktx)
     implementation(libs.room.compiler)
     implementation(libs.room.runtime)
+    implementation(libs.hilt)
+    implementation(libs.hilt.compiler)
 }
