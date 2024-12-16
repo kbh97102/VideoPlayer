@@ -1,4 +1,4 @@
-package com.arakene.videoplayer
+package com.arakene.videoplayer.ui
 
 import android.content.ContentResolver
 import android.database.Cursor
