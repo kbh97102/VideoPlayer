@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(indices = [Index(value = ["uri"], unique = true)])
+@Entity(tableName = "Video", indices = [Index(value = ["uri"], unique = true)])
 data class Video(
     @PrimaryKey(autoGenerate = true) val uid: Int = 0,
     @ColumnInfo(name = "uri") val uri: String,
