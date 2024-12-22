@@ -37,6 +37,11 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        resources {
+//            excludes += "META-INF/gradle/incremental.annotation.processors"
+        }
+    }
 }
 
 dependencies {
@@ -57,11 +62,17 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.exoplayer)
-    implementation(libs.exoplayer.ui)
-    implementation(libs.exoplayer.common)
-    implementation(libs.room.ktx)
-    implementation(libs.room.compiler)
-    implementation(libs.room.runtime)
+//    implementation(libs.exoplayer.ui)
+//    implementation(libs.exoplayer.common)
+//    implementation(libs.room.ktx) {
+//        exclude(group = "com.intellij", module = "annotations")
+//    }
+//    implementation(libs.room.compiler) {
+//        exclude(group = "com.intellij", module = "annotations")
+//    }
+//    implementation(libs.room.runtime) {
+//        exclude(group = "com.intellij", module = "annotations")
+//    }
     implementation(libs.hilt)
     implementation(libs.hilt.compiler)
     implementation(libs.hilt.navigation)

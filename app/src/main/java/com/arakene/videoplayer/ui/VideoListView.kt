@@ -1,5 +1,6 @@
 package com.arakene.videoplayer.ui
 
+import Video
 import android.content.ContentResolver
 import android.database.Cursor
 import android.graphics.Bitmap
@@ -11,18 +12,25 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.arakene.videoplayer.db.Video
+
 import com.arakene.videoplayer.ui.viewmodels.VideoListViewModel
 import java.util.UUID
 
@@ -33,8 +41,8 @@ fun VideoListView(
 ) {
     val context = LocalContext.current
 
-    var bitMap: Bitmap? by remember {
-        mutableStateOf(null)
+    val videoList = remember {
+        viewModel.videoList
     }
 
 // Activity Result Launcher for picking a document
@@ -47,20 +55,24 @@ fun VideoListView(
                 //            onFileSelected(it)
                 Log.d(">>>>", "uri $it")
 
-                viewModel.insertVideo(
-                    Video(
-                        uri = it,
-                        title = "testTitle ${UUID.randomUUID()}",
-                        thumbnail = null
-                    )
-                )
+//                viewModel.insertVideo(
+//                    Video(
+//                        uri = it,
+//                        title = "testTitle ${UUID.randomUUID()}",
+//                        thumbnail = null
+//                    )
+//                )
 
-                getThumbnailFromContentUri(context.contentResolver, it)?.let { result ->
-                    bitMap = result
-                }
+                val bitmap = getThumbnailFromContentUri(context.contentResolver, it)
 
                 getVideoMetadata(context.contentResolver, it).also { map ->
-                    Log.d(">>>>", "Map $map")
+//                    viewModel.insertVideo(
+//                        video = Video(
+//                            uri = uri,
+//                            title = map?.first ?: "",
+//                            thumbnail = bitmap
+//                        )
+//                    )
                 }
             }
         }
@@ -69,22 +81,56 @@ fun VideoListView(
 
 
 
-    Column {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp)) {
+
         Button(onClick = {
             launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)) // Filter for video files
         }) {
             Text(text = "Select Video")
         }
 
-        if (bitMap != null) {
 
-            val test = bitMap!!.asImageBitmap()
-
-            Image(test, contentDescription = null)
+        Column(modifier = Modifier.fillMaxWidth()) {
+            videoList.forEach {
+                TestVideoListItem(video = it, modifier = Modifier.padding(top = 10.dp))
+            }
         }
+    }
+}
+
+@Composable
+private fun TestVideoListItem(
+    video: Video,
+    modifier: Modifier = Modifier
+) {
+
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+
+        if (video.thumbnail == null) {
+            Box(
+                modifier = Modifier
+                    .size(200.dp)
+                    .background(Color.Gray)
+            )
+        } else {
+            Image(
+                modifier = Modifier.size(200.dp),
+                contentDescription = null,
+                bitmap = video.thumbnail.asImageBitmap()
+            )
+        }
+
+        Column {
+            Text(text = video.title)
+        }
+
+
     }
 
 }
+
 
 fun getThumbnailFromContentUri(contentResolver: ContentResolver, contentUri: Uri): Bitmap? {
     return try {
@@ -98,7 +144,7 @@ fun getThumbnailFromContentUri(contentResolver: ContentResolver, contentUri: Uri
 }
 
 
-fun getVideoMetadata(contentResolver: ContentResolver, contentUri: Uri): Map<String, Any?> {
+fun getVideoMetadata(contentResolver: ContentResolver, contentUri: Uri): Pair<String, Long>? {
     val projection = arrayOf(
         MediaStore.Video.Media.TITLE,
         MediaStore.Video.Media.DURATION,
@@ -117,18 +163,23 @@ fun getVideoMetadata(contentResolver: ContentResolver, contentUri: Uri): Map<Str
         null
     )
 
-    cursor?.use {
+    return cursor?.use {
         if (it.moveToFirst()) {
-            metadata["title"] = it.getString(it.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE))
-            metadata["duration"] =
+//            metadata["title"] = it.getString(it.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE))
+//            metadata["duration"] =
+//                it.getLong(it.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION))
+//            metadata["size"] = it.getLong(it.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE))
+//            metadata["dateAdded"] =
+//                it.getLong(it.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED))
+//            metadata["mimeType"] =
+//                it.getString(it.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE))
+            Pair(
+                it.getString(it.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE)),
                 it.getLong(it.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION))
-            metadata["size"] = it.getLong(it.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE))
-            metadata["dateAdded"] =
-                it.getLong(it.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED))
-            metadata["mimeType"] =
-                it.getString(it.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE))
+            )
+        } else {
+            null
         }
     }
 
-    return metadata
 }
