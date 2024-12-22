@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -39,7 +41,7 @@ android {
     }
     packaging {
         resources {
-//            excludes += "META-INF/gradle/incremental.annotation.processors"
+            excludes += "/META-INF/gradle/incremental.annotation.processors"
         }
     }
 }
@@ -62,18 +64,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.exoplayer)
-//    implementation(libs.exoplayer.ui)
-//    implementation(libs.exoplayer.common)
-//    implementation(libs.room.ktx) {
-//        exclude(group = "com.intellij", module = "annotations")
-//    }
-//    implementation(libs.room.compiler) {
-//        exclude(group = "com.intellij", module = "annotations")
-//    }
-//    implementation(libs.room.runtime) {
-//        exclude(group = "com.intellij", module = "annotations")
-//    }
+    implementation(libs.exoplayer.ui)
+    implementation(libs.exoplayer.common)
+    implementation(libs.room.ktx) {
+        exclude(group = "com.intellij", module = "annotations")
+    }
+    kapt(libs.room.compiler)
+    implementation(libs.room.runtime) {
+        exclude(group = "com.intellij", module = "annotations")
+    }
     implementation(libs.hilt)
-    implementation(libs.hilt.compiler)
     implementation(libs.hilt.navigation)
+    kapt(libs.hilt.compiler)
 }

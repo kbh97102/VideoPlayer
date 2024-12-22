@@ -5,4 +5,9 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class VideoPlayerApplication: Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+    }
+
 }

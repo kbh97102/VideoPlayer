@@ -1,6 +1,5 @@
 package com.arakene.videoplayer.ui
 
-import Video
 import android.content.ContentResolver
 import android.database.Cursor
 import android.graphics.Bitmap
@@ -30,6 +29,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.arakene.videoplayer.db.Video
 
 import com.arakene.videoplayer.ui.viewmodels.VideoListViewModel
 import java.util.UUID
@@ -55,24 +55,24 @@ fun VideoListView(
                 //            onFileSelected(it)
                 Log.d(">>>>", "uri $it")
 
-//                viewModel.insertVideo(
-//                    Video(
-//                        uri = it,
-//                        title = "testTitle ${UUID.randomUUID()}",
-//                        thumbnail = null
-//                    )
-//                )
+                viewModel.insertVideo(
+                    Video(
+                        uri = it,
+                        title = "testTitle ${UUID.randomUUID()}",
+                        thumbnail = null
+                    )
+                )
 
                 val bitmap = getThumbnailFromContentUri(context.contentResolver, it)
 
                 getVideoMetadata(context.contentResolver, it).also { map ->
-//                    viewModel.insertVideo(
-//                        video = Video(
-//                            uri = uri,
-//                            title = map?.first ?: "",
-//                            thumbnail = bitmap
-//                        )
-//                    )
+                    viewModel.insertVideo(
+                        video = Video(
+                            uri = uri,
+                            title = map?.first ?: "",
+                            thumbnail = bitmap
+                        )
+                    )
                 }
             }
         }
@@ -81,9 +81,11 @@ fun VideoListView(
 
 
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
 
         Button(onClick = {
             launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)) // Filter for video files
