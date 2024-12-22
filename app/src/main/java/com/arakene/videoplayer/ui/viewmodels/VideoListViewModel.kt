@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.arakene.videoplayer.db.Video
 import com.arakene.videoplayer.db.VideoDao
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,13 +19,13 @@ class VideoListViewModel @Inject constructor(
 
     val videoList = mutableStateListOf<Video>()
 
-    fun insertVideo(video: Video) = viewModelScope.launch {
+    fun insertVideo(video: Video) = viewModelScope.launch(Dispatchers.IO) {
         videoDao.insert(video)
         delay(200)
         getVideos()
     }
 
-    fun getVideos() = viewModelScope.launch {
+    fun getVideos() = viewModelScope.launch(Dispatchers.IO) {
         videoDao.getAll().also {
 
             it.forEach { video ->
