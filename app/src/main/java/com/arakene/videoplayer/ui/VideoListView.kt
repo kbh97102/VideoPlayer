@@ -23,6 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +46,10 @@ fun VideoListView(
 
     val videoList = remember {
         viewModel.videoList
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getVideos()
     }
 
 // Activity Result Launcher for picking a document
