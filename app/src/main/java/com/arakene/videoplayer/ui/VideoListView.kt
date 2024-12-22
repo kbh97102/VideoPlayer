@@ -12,6 +12,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.common.Player
+import androidx.media3.ui.PlayerView
 import com.arakene.videoplayer.db.Video
 
 import com.arakene.videoplayer.ui.viewmodels.VideoListViewModel
@@ -40,6 +43,7 @@ import java.util.UUID
 
 @Composable
 fun VideoListView(
+    navigate: (NavigationRoute) -> Unit,
     viewModel: VideoListViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -104,7 +108,11 @@ fun VideoListView(
 
         Column(modifier = Modifier.fillMaxWidth()) {
             videoList.forEach {
-                TestVideoListItem(video = it, modifier = Modifier.padding(top = 10.dp))
+                TestVideoListItem(video = it, modifier = Modifier
+                    .padding(top = 10.dp)
+                    .clickable {
+                        navigate(NavigationRoute.Player(it.uri.toString()))
+                    })
             }
         }
     }

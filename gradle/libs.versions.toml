@@ -12,6 +12,8 @@ exoplayer = "1.5.1"
 room = "2.6.1"
 hilt = "2.52"
 hilt-navigation = "1.2.0"
+kotlinx-serialization-json = "1.8.0-RC"
+compose-navigation = "2.8.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,17 +33,22 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "exoplayer" }
 exoplayer-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "exoplayer" }
 exoplayer-common = { group = "androidx.media3", name = "media3-common", version.ref = "exoplayer" }
-room-runtime = {group = "androidx.room", name = "room-runtime", version.ref = "room"}
-room-compiler = {group = "androidx.room", name = "room-compiler", version.ref = "room"}
-room-ktx = {group = "androidx.room", name = "room-ktx", version.ref = "room"}
-hilt = {group = "com.google.dagger", name = "hilt-android", version.ref = "hilt"}
-hilt-compiler = {group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt"}
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
+
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-hilt-plugin = {id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlinx-serialization-json = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
