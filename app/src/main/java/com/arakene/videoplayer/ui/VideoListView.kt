@@ -1,6 +1,7 @@
 package com.arakene.videoplayer.ui
 
 import android.content.ContentResolver
+import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
@@ -65,6 +66,9 @@ fun VideoListView(
                 // Callback when a file is selected
                 //            onFileSelected(it)
                 Log.d(">>>>", "uri $it")
+
+                // TODO: Android11 부터는 SAF 권한이 필요하다고 gpt가 말하는데 정확히 체크해봐야함
+                context.grantUriPermission(context.packageName, it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
                 viewModel.insertVideo(
                     Video(
