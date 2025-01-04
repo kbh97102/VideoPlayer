@@ -13,6 +13,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -34,10 +36,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.media3.common.Player
-import androidx.media3.ui.PlayerView
 import com.arakene.videoplayer.db.Video
-
 import com.arakene.videoplayer.ui.viewmodels.VideoListViewModel
 import java.util.UUID
 
@@ -68,7 +67,11 @@ fun VideoListView(
                 Log.d(">>>>", "uri $it")
 
                 // TODO: Android11 부터는 SAF 권한이 필요하다고 gpt가 말하는데 정확히 체크해봐야함
-                context.grantUriPermission(context.packageName, it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                context.grantUriPermission(
+                    context.packageName,
+                    it,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
 
                 viewModel.insertVideo(
                     Video(
@@ -128,17 +131,24 @@ private fun TestVideoListItem(
     modifier: Modifier = Modifier
 ) {
 
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .border(2.dp, color = Color.Gray, shape = RoundedCornerShape(4.dp))
+            .padding(horizontal = 10.dp, vertical = 8.dp)
+        ,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
 
         if (video.thumbnail == null) {
             Box(
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(50.dp)
                     .background(Color.Gray)
             )
         } else {
             Image(
-                modifier = Modifier.size(200.dp),
+                modifier = Modifier.size(50.dp),
                 contentDescription = null,
                 bitmap = video.thumbnail.asImageBitmap()
             )
