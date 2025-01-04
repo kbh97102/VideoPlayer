@@ -81,6 +81,10 @@ fun VideoListView(
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
 
+                val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                context.contentResolver.takePersistableUriPermission(uri, flag)
+
+
                 viewModel.insertVideo(
                     Video(
                         uri = it,
@@ -151,7 +155,7 @@ fun VideoListView(
                     .padding(top = 10.dp)
                     .pointerInput(Unit) {
                         detectTapGestures(
-                            onPress = {
+                            onTap = {
                                 navigate(NavigationRoute.Player(video.uri.toString()))
                             },
                             onLongPress = {
@@ -197,6 +201,9 @@ private fun TestVideoListItem(
         }
 
         Column {
+            LaunchedEffect(video) {
+                Log.e(">>>>", "title ${video.title}")
+            }
             Text(text = video.title)
         }
 
