@@ -19,6 +19,8 @@ class VideoListViewModel @Inject constructor(
 
     val videoList = mutableStateListOf<Video>()
 
+    var targetVideo: Video? = null
+
     fun insertVideo(video: Video) = viewModelScope.launch(Dispatchers.IO) {
         videoDao.insert(video)
         delay(200)
@@ -27,13 +29,20 @@ class VideoListViewModel @Inject constructor(
 
     fun getVideos() = viewModelScope.launch(Dispatchers.IO) {
         videoDao.getAll().also {
-
+            videoList.clear()
             it.forEach { video ->
                 videoList.add(video)
             }
-
-            Log.d(">>>>", "Videos ${it.toTypedArray().contentDeepToString()}")
         }
+    }
+
+    fun deleteVideo() = viewModelScope.launch(Dispatchers.IO) {
+        launch {
+            targetVideo?.let {
+                videoDao.delete(it)
+            }
+        }.join()
+        getVideos()
     }
 
 }

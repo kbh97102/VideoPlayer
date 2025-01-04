@@ -15,9 +15,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,13 +30,19 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.arakene.videoplayer.db.Video
 import com.arakene.videoplayer.ui.viewmodels.VideoListViewModel
@@ -98,6 +106,30 @@ fun VideoListView(
     }
 
 
+    var displayDeletePopUp by remember {
+        mutableStateOf(false)
+    }
+
+
+
+    if (displayDeletePopUp) {
+        Popup(alignment = Alignment.Center, onDismissRequest = {
+            displayDeletePopUp = false
+        }) {
+
+            Column(modifier = Modifier.background(Color.White)) {
+                Text("Delete?")
+
+                Button(onClick = {
+                    viewModel.deleteVideo()
+                    displayDeletePopUp = false
+                }) {
+                    Text("OK")
+                }
+            }
+
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -114,15 +146,26 @@ fun VideoListView(
 
 
         Column(modifier = Modifier.fillMaxWidth()) {
-            videoList.forEach {
-                TestVideoListItem(video = it, modifier = Modifier
+            videoList.forEach { video ->
+                TestVideoListItem(video = video, modifier = Modifier
                     .padding(top = 10.dp)
-                    .clickable {
-                        navigate(NavigationRoute.Player(it.uri.toString()))
-                    })
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onPress = {
+                                navigate(NavigationRoute.Player(video.uri.toString()))
+                            },
+                            onLongPress = {
+                                viewModel.targetVideo = video
+                                displayDeletePopUp = true
+                            }
+                        )
+                    }
+                )
             }
         }
     }
+
+
 }
 
 @Composable
@@ -135,8 +178,7 @@ private fun TestVideoListItem(
         modifier = modifier
             .fillMaxWidth()
             .border(2.dp, color = Color.Gray, shape = RoundedCornerShape(4.dp))
-            .padding(horizontal = 10.dp, vertical = 8.dp)
-        ,
+            .padding(horizontal = 10.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
